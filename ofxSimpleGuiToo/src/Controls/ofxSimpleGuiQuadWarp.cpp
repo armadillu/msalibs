@@ -99,7 +99,7 @@ void ofxSimpleGuiQuadWarp::draw(float x, float y) {
 	setPos(x, y);
 	glPushMatrix();
 	glTranslatef(x, y, 0);
-	glColor3f(1, 1, 1);
+	glColor4f(1, 1, 1, 1);
 	baseDraw->draw(0, 0);
 	
 	ofEnableAlphaBlending();

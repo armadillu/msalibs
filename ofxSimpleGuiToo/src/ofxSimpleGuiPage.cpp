@@ -159,11 +159,17 @@ void ofxSimpleGuiPage::draw(float x, float y, bool alignRight) {
 				ofRect(controlX , controlY , control.width , control.height );
 				config->borderColor = config->selectedBorderColor;							
 				ofRect(controlX -1 , controlY -1, control.width +2, control.height+2);
-				glEnable(GL_LINE_STIPPLE);
-				glLineStipple(2, 0x9999);
-				ofSetHexColor(config->borderColor);						
-				ofRect(controlX -1 , controlY -1, control.width +2, control.height+2);
-				glDisable(GL_LINE_STIPPLE);
+				#ifndef TARGET_OF_IPHONE
+					glEnable(GL_LINE_STIPPLE);
+					glLineStipple(2, 0x9999);
+					ofSetHexColor(config->borderColor);						
+					ofRect(controlX -1 , controlY -1, control.width +2, control.height+2);
+					glDisable(GL_LINE_STIPPLE);					
+				#else
+					ofSetHexColor(config->borderColor);
+					ofRect(controlX -5 , controlY , 5, control.height);
+					ofRect(controlX + control.width, controlY , 5, control.height);
+				#endif
 				config->borderColor = oldColor;
 			}else {				
 				glLineWidth(0.5f);
@@ -337,7 +343,8 @@ void ofxSimpleGuiPage::keyPressed(ofKeyEventArgs &e) {
 	
 	for(int i=0; i<controls.size(); i++) {
 		ofxSimpleGuiControl *c = controls[i];
-		if((c->isMouseOver() || i == guiSelection ) && !c->visualizeOnly ) {
+		//if( (c->isMouseOver() || i == guiSelection ) && !c->visualizeOnly ) {
+		if( ( i == guiSelection ) && !c->visualizeOnly ) { // ignore where the mouse is, listen to keyb only
 			//if(keyUp)		c->onKeyUp();
 			//if(keyDown)		c->onKeyDown();
 			if(keyLeft)		c->onKeyLeft();
