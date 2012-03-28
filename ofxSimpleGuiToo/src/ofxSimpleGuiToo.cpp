@@ -240,7 +240,7 @@ void ofxSimpleGuiToo::setPage(string name) {
 
 
 ofxSimpleGuiPage& ofxSimpleGuiToo::page(int i) {
-	printf("page(%d) num pages : %d", i, pages.size());
+	//printf("page(%d) num pages : %d", i, pages.size());
 	return *pages.at(i);
 }
 
