@@ -52,6 +52,17 @@ public:
 	bool		hasTitle;
 	char		keyboardShortcut;
 
+	//uri added to add option to not load some values to xml
+	bool		ignoreXML;
+	ofxSimpleGuiControl& setIgnoreXML(bool ignore){ ignoreXML = ignore; return *this; };
+	bool				 ignoresXML(){ return ignoreXML; }
+
+	//uri added to allow "only output" controls, where user can't modify, only watch
+	bool		visualizeOnly;
+	ofxSimpleGuiControl& setVisualizeOnly(bool v){ visualizeOnly = v; return *this; };
+	bool				 isVisualizeOnly(){ return visualizeOnly; }
+
+
 	ofxSimpleGuiControl(string name);
 	ofxSimpleGuiControl& setName(string newName);
 	ofxSimpleGuiControl& setKey(string newKey);

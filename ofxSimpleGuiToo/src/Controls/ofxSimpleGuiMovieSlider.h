@@ -130,8 +130,8 @@ public:
 		ofEnableAlphaBlending();
 		ofFill();
 		ofSetColor(255, 255, 255, 200);
-//		if(isMouseOver()) ofSetHexColor(config->overColor.r, config->overColor.g, config->overColor.b);
-//		if(focused && !isMouseOver()) ofSetHexColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
+//		if(isMouseOver()) ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
+//		if(focused && !isMouseOver()) ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
 		ofRect(0, 0, width, height);
 
 		setFullColor();
@@ -147,11 +147,11 @@ public:
 
 		// cues
 //		if(cuePoint1 > 0.0) {
-//			ofSetHexColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
+//			ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
 //			ofRect(ofMap(cuePoint1, 0.0, 1.0, 0.0, width), 0, 1, height);
 //		}
 //		if(cuePoint2 < 1.0) {
-//			ofSetHexColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
+//			ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b, 200);
 //			ofRect(ofMap(cuePoint2, 0.0, 1.0, 0.0, width), 0, 1, height);
 //		}
 

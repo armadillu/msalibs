@@ -19,6 +19,8 @@ public:
 	void setValue(bool b);
 	void toggle();
 	
+	void onKeyEnter() ;
+
 	void setToggleMode(bool b);
 	
 	void onPress(int x, int y, int button);

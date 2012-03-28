@@ -41,11 +41,12 @@ public:
 	}
 
 	void loadFromXML(ofxXmlSettings &XML) {
-		setValue((Type)XML.getValue(controlType + "_" + key + ":value", 0.0f));
+		if (!ignoreXML)
+			setValue((Type)XML.getValue(controlType + "_" + key + ":value", 0.0f));
 	}
 	
 	void setSmoothing(float smoothing) {
-		lerpSpeed	= 1.0f - smoothing * 0.9;		// so smoothing :1 still results in some motion!
+		lerpSpeed	= 1.0f - smoothing ;
 	}
 	
 	void setIncrement(Type increment) {
@@ -80,13 +81,13 @@ public:
 	
 
 	void increase() {
-		if(increment == 0) setIncrement((max - min) * 0.001);
+		if(increment == 0) setIncrement((max - min) * 0.01);
 //		oldValue = *value;		// save oldValue (so the draw doesn't update target but uses it)
 		setTargetValue(*value + increment);
 	}
 
 	void decrease() {
-		if(increment == 0) setIncrement((max - min) * 0.001);
+		if(increment == 0) setIncrement((max - min) * 0.01);
 //		oldValue = *value;		// save oldValue (so the draw doesn't update target but uses it)
 		setTargetValue(*value - increment);
 	}
@@ -177,21 +178,26 @@ public:
 
 		setEmptyColor();
 		ofRect(0, 0, width, config->sliderHeight);
-
-
+		
 		setFullColor();
-		ofRect(0, 0, barwidth, config->sliderHeight);
+		ofRect(0, 0, barwidth , config->sliderHeight);
 
 		setTextBGColor();
 		ofRect(0, config->sliderHeight, width, config->sliderTextHeight);
 
+		if ( ignoresXML() ){
+			ofSetHexColor(config->noXmlColor);
+			ofRect(width-config->noXmlBarWidth, config->sliderHeight, config->noXmlBarWidth, height - config->sliderHeight);
+		}
+
 		setTextColor();
 		string s = name + ": " + ofToString((*value));
 		ofDrawBitmapString(s, 3, config->sliderHeight + 14);
+				
 		ofDisableAlphaBlending();
 		glPopMatrix();
+		
+		
 	}
-
-
 
 };

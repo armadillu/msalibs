@@ -20,7 +20,8 @@ void ofxSimpleGuiToggle::setup() {
 }
 
 void ofxSimpleGuiToggle::loadFromXML(ofxXmlSettings &XML) {
-	setValue(XML.getValue(controlType + "_" + key + ":value", 0));
+	if (!ignoreXML)
+		setValue(XML.getValue(controlType + "_" + key + ":value", 0));
 }
 
 void ofxSimpleGuiToggle::saveToXML(ofxXmlSettings &XML) {
@@ -82,6 +83,8 @@ void ofxSimpleGuiToggle::draw(float x, float y) {
 	setFullColor(*value);
 	ofRect(0, 0, height, height);
 	
+
+	
 	if((*value)) {
 		setTextColor();
 		ofLine(0, 0, height, height);
@@ -90,6 +93,11 @@ void ofxSimpleGuiToggle::draw(float x, float y) {
 	
 	setTextBGColor();
 	ofRect(height, 0, width - height, height);
+
+	if ( ignoresXML() ){
+		ofSetHexColor(config->noXmlColor);
+		ofRect(width-config->noXmlBarWidth, 0, config->noXmlBarWidth, height);
+	}
 	
 	setTextColor();
 	ofDrawBitmapString(name, height + 15, 15);

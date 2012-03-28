@@ -49,6 +49,7 @@ ofxSimpleGuiConfig::ofxSimpleGuiConfig() {
 	slider2DTextHeight	= titleHeight * 1.5;
 	comboBoxHeight		= titleHeight;	//15
 	comboBoxTextHeight	= 15;
+	noXmlBarWidth		= 4;
 	
 	
 	padding.set			(titleHeight/2, 10);
@@ -67,6 +68,10 @@ ofxSimpleGuiConfig::ofxSimpleGuiConfig() {
 	fullOverColor		= 0xffffff;
 	fullActiveColor		= 0x881818;
 	emptyColor			= 0x333333;
-	
+	noXmlColor			= 0xff00ff;	
+	selectionColor		= 0xFFFFFF;
+	selectedBorderColor = 0xFFFFFF;
+	visualizeOnlyColor  = 0x666666;
+
 	borderColor			= 0x333333;
 }

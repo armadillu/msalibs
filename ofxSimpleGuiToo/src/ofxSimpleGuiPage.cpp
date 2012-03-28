@@ -36,6 +36,8 @@
 
 #include "ofxSimpleGuiPage.h"
 
+extern int	guiSelection;
+
 ofxSimpleGuiPage::ofxSimpleGuiPage(string name) : ofxSimpleGuiControl(name) {
 	disableAllEvents();
 	width = 0;
@@ -76,14 +78,15 @@ void ofxSimpleGuiPage::loadFromXML() {
 void ofxSimpleGuiPage::saveToXML() {
 	if(controls.size() <= 1 || xmlFilename.compare("") == 0) return;	// if it has no controls (title counts as one control)
 	
-	XML.saveFile(xmlFilename + ".bak");
+	//XML.saveFile(xmlFilename + ".bak");	// no need for backups (uri)
 	
 	XML.clear();	// clear cause we are building a new xml file
 	
 	XML.addTag("controls");
 	XML.pushTag("controls");
 	for(int i=0; i < controls.size(); i++) {
-		controls[i]->saveToXML(XML);
+		if (!controls[i]->ignoresXML() )	//only save if we care about XML
+			controls[i]->saveToXML(XML);
 	}
 	XML.popTag();
 	
@@ -112,6 +115,7 @@ void ofxSimpleGuiPage::draw(float x, float y, bool alignRight) {
 	ofSetRectMode(OF_RECTMODE_CORNER);
 	
 	for(int i=0; i<controls.size(); i++) {
+		
 		ofxSimpleGuiControl &control = *controls[i];
 		
 		if(control.newColumn) {
@@ -129,14 +133,47 @@ void ofxSimpleGuiPage::draw(float x, float y, bool alignRight) {
 			stealingY = controlY;
 		} else {
 //			printf("drawing control: %s %s\n", control.controlType.c_str(), control.name.c_str());
+			
+			int oldColor = config->textColor;
+//			if (guiSelection == i && name != "Header"){
+//				config->textColor = config->selectionColor;
+//			}
+			//text for "visualizeOnly" items is diff			
+			if (control.isVisualizeOnly()){
+				config->textColor = config->visualizeOnlyColor;
+			}
+
 			control.draw(controlX, controlY);
+			
+			//restore textColor
+			config->textColor = oldColor;
 		}
 		
 		if(control.hasTitle) {
-			ofNoFill();
-			ofSetHexColor(config->borderColor);
-			glLineWidth(0.5f);
-			ofRect(controlX, controlY, control.width, control.height);
+			ofNoFill();			
+			int oldColor = config->borderColor;
+			
+			if (guiSelection == i && name != "Header"){
+				glLineWidth(1);
+				ofSetHexColor(config->borderColor);
+				ofRect(controlX , controlY , control.width , control.height );
+				config->borderColor = config->selectedBorderColor;							
+				ofRect(controlX -1 , controlY -1, control.width +2, control.height+2);
+				glEnable(GL_LINE_STIPPLE);
+				glLineStipple(2, 0x9999);
+				ofSetHexColor(config->borderColor);						
+				ofRect(controlX -1 , controlY -1, control.width +2, control.height+2);
+				glDisable(GL_LINE_STIPPLE);
+				config->borderColor = oldColor;
+			}else {				
+				glLineWidth(0.5f);
+				if (control.isVisualizeOnly()){
+					ofSetHexColor(config->visualizeOnlyColor);
+				}else{
+					ofSetHexColor(config->borderColor);						
+				}
+				ofRect(controlX, controlY, control.width, control.height);
+			}
 		}
 		posY = getNextY(posY + control.height + config->padding.y);
 		
@@ -155,6 +192,7 @@ void ofxSimpleGuiPage::draw(float x, float y, bool alignRight) {
 		if(eventStealingControl->hasTitle) {
 			ofNoFill();
 			ofSetHexColor(config->borderColor);
+
 			glLineWidth(0.5f);
 			ofRect(stealingX, stealingY, eventStealingControl->width, eventStealingControl->height);
 		}
@@ -180,6 +218,7 @@ ofxSimpleGuiContent &ofxSimpleGuiPage::addContent(string name, ofBaseDraws &cont
 ofxSimpleGuiFPSCounter &ofxSimpleGuiPage::addFPSCounter() {
 	return (ofxSimpleGuiFPSCounter &)addControl(* new ofxSimpleGuiFPSCounter());
 }
+
 
 ofxSimpleGuiQuadWarp &ofxSimpleGuiPage::addQuadWarper(string name, ofBaseDraws &baseDraw, ofPoint *pts) {
 	return (ofxSimpleGuiQuadWarp &)addControl(* new ofxSimpleGuiQuadWarp(name, baseDraw, pts));
@@ -219,8 +258,6 @@ ofxSimpleGuiComboBox &ofxSimpleGuiPage::addComboBox(string name, int &choice_out
 }
 
 
-
-
 void ofxSimpleGuiPage::update(ofEventArgs &e) {
 	for(int i=0; i<controls.size(); i++) controls[i]->update();
 }
@@ -233,45 +270,76 @@ void ofxSimpleGuiPage::ReleaseEventStealingControl() {
 }
 
 void ofxSimpleGuiPage::mouseMoved(ofMouseEventArgs &e) {
-	if(eventStealingControl)
+	if(eventStealingControl){
 		eventStealingControl->_mouseMoved(e);
-	else
-		for(int i=0; i<controls.size(); i++) controls[i]->_mouseMoved(e);
+	}
+	else{
+		for(int i=0; i<controls.size(); i++){
+			if (!controls[i]->visualizeOnly)
+				controls[i]->_mouseMoved(e);
+		}
+	}
 }
 
 void ofxSimpleGuiPage::mousePressed(ofMouseEventArgs &e) {
 	if(eventStealingControl)
 		eventStealingControl->_mousePressed(e);
-	else
-		for(int i=0; i<controls.size(); i++) controls[i]->_mousePressed(e);
+	else{
+		for(int i=0; i<controls.size(); i++){
+			if (!controls[i]->visualizeOnly)
+				controls[i]->_mousePressed(e);
+		}
+	}
 }
 
 void ofxSimpleGuiPage::mouseDragged(ofMouseEventArgs &e) {
 	if(eventStealingControl)
 		eventStealingControl->_mouseDragged(e);
-	else
-		for(int i=0; i<controls.size(); i++) controls[i]->_mouseDragged(e);
+	else{
+		for(int i=0; i<controls.size(); i++){
+			if (!controls[i]->visualizeOnly)
+				controls[i]->_mouseDragged(e);
+		}
+	}
 }
 
 void ofxSimpleGuiPage::mouseReleased(ofMouseEventArgs &e) {
 	if(eventStealingControl)
 		eventStealingControl->_mouseReleased(e);
-	else
-		for(int i=0; i<controls.size(); i++) controls[i]->_mouseReleased(e);
+	else{
+		for(int i=0; i<controls.size(); i++){
+			if (!controls[i]->visualizeOnly)
+				controls[i]->_mouseReleased(e);
+		}
+	}
 }
 
 void ofxSimpleGuiPage::keyPressed(ofKeyEventArgs &e) {
-	bool keyUp		= e.key == OF_KEY_UP;
-	bool keyDown	= e.key == OF_KEY_DOWN;
+	//bool keyUp		= e.key == OF_KEY_UP;
+	//bool keyDown	= e.key == OF_KEY_DOWN;
 	bool keyLeft	= e.key == OF_KEY_LEFT;
 	bool keyRight	= e.key == OF_KEY_RIGHT;
 	bool keyEnter	= e.key == OF_KEY_RETURN;
 	
+	bool keyNext	= e.key == OF_KEY_DOWN;
+	bool keyPrev	= e.key == OF_KEY_UP;
+	
+	if (keyNext){ guiSelection ++;
+		if ( guiSelection >= controls.size()){
+			guiSelection = 0;
+		}		
+	}
+	if (keyPrev){ guiSelection --;
+		if ( guiSelection <= -1){
+			guiSelection = controls.size() - 1;
+		}		
+	}
+	
 	for(int i=0; i<controls.size(); i++) {
 		ofxSimpleGuiControl *c = controls[i];
-		if(c->isMouseOver()) {
-			if(keyUp)		c->onKeyUp();
-			if(keyDown)		c->onKeyDown();
+		if((c->isMouseOver() || i == guiSelection ) && !c->visualizeOnly ) {
+			//if(keyUp)		c->onKeyUp();
+			//if(keyDown)		c->onKeyDown();
 			if(keyLeft)		c->onKeyLeft();
 			if(keyRight)	c->onKeyRight();
 			if(keyEnter)	c->onKeyEnter();
@@ -281,7 +349,10 @@ void ofxSimpleGuiPage::keyPressed(ofKeyEventArgs &e) {
 }
 
 void ofxSimpleGuiPage::keyReleased(ofKeyEventArgs &e) {
-	for(int i=0; i<controls.size(); i++) if(controls[i]->isMouseOver()) controls[i]->_keyReleased(e);
+	for(int i=0; i<controls.size(); i++) 
+		if(controls[i]->isMouseOver()) {
+			controls[i]->_keyReleased(e);
+		}
 }
 
 

@@ -45,7 +45,7 @@ class ofxSimpleGuiToo {
 public:
 	int							guiFocus;
 	
-	ofxSimpleGuiConfig			*config;	
+	ofxSimpleGuiConfig			*config;
 	
 	ofxSimpleGuiToo();
 	void						setup();
@@ -90,6 +90,8 @@ public:
 	ofxSimpleGuiContent			&addContent(string name, ofBaseDraws &content, float fixwidth = -1);
 	ofxSimpleGuiButton			&addButton(string name, bool &value);
 	ofxSimpleGuiFPSCounter		&addFPSCounter();
+	
+	
 	//	ofxSimpleGuiMovieSlider		&addMovieSlider(string name, ofVideoPlayer& input);
 	ofxSimpleGuiQuadWarp		&addQuadWarper(string name, ofBaseDraws &baseDraw, ofPoint *pts);
 	ofxSimpleGuiSliderInt		&addSlider(string name, int &value, int min, int max);
@@ -104,6 +106,7 @@ public:
 	void						draw();
 	
 protected:
+		
 	bool							doAutoSave;
 	bool							alignRight;
 	bool							doDefaultKeys;
@@ -140,6 +143,7 @@ protected:
 
 
 extern ofxSimpleGuiToo gui;
+extern int	guiSelection;
 
 
 

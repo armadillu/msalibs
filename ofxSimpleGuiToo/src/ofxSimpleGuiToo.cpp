@@ -36,7 +36,7 @@
 #include "ofxSimpleGuiToo.h"
 
 ofxSimpleGuiToo gui;
-
+int	guiSelection;
 
 //------------------------------------------------------------------------------ constrcutor
 ofxSimpleGuiToo::ofxSimpleGuiToo() {
@@ -57,7 +57,6 @@ void ofxSimpleGuiToo::setup() {
 	titleButton = &headerPage->addButton("title", changePage);
 	headerPage->addToggle("Auto Save", doAutoSave);
 	headerPage->addButton("Save Settings", doSave);
-	headerPage->addFPSCounter();
 
 	addPage();
 	setAutoSave(true);
@@ -66,6 +65,7 @@ void ofxSimpleGuiToo::setup() {
 	setPage(1);
 	
 	ofAddListener(ofEvents.keyPressed, this, &ofxSimpleGuiToo::keyPressed);
+	guiSelection = -1;
 }
 
 
@@ -167,7 +167,7 @@ void ofxSimpleGuiToo::drawFocus(float x, float y) {
 	glPushMatrix();
 	glTranslatef(x, y, 0);
 	ofFill();
-//	ofSetHexColor(config->focusColor.r, config->focusColor.g, config->focusColor.b, 200);
+//	ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b, 200);
 	ofRect(0, 0, 10, 10);
 	glPopMatrix();
 }
@@ -219,6 +219,12 @@ void ofxSimpleGuiToo::setPage(int i) {
 	else if(currentPageIndex < 1) currentPageIndex = pages.size()-1;
 	
 	if(titleButton) titleButton->setName(ofToString(currentPageIndex) + ": " + pages[currentPageIndex]->name);
+
+	if ( currentPage().getControls().size() > 0){	//uri
+		guiSelection = 0;
+	}else{
+		guiSelection = -1;
+	}
 }
 
 
@@ -234,6 +240,7 @@ void ofxSimpleGuiToo::setPage(string name) {
 
 
 ofxSimpleGuiPage& ofxSimpleGuiToo::page(int i) {
+	printf("page(%d) num pages : %d", i, pages.size());
 	return *pages.at(i);
 }
 
@@ -259,7 +266,7 @@ ofxSimpleGuiPage &ofxSimpleGuiToo::addPage(string name) {
 	ofxSimpleGuiPage *newPage = new ofxSimpleGuiPage(name);//ofToString(pages.size(), 0) + ": " + name);
 	pages.push_back(newPage);
 	if(name == "") newPage->setName("SETTINGS");
-	static bool b;
+
 //	if(pages.size() > 1) headerPage->addTitle(newPage->name);		// if this isn't the first page, add to header
 //	if(pages.size() > 1) newPage->addTitle(newPage->name);		// if this isn't the first page, add to header
 	setPage(pages.size() - 1);
@@ -297,6 +304,7 @@ ofxSimpleGuiFPSCounter &ofxSimpleGuiToo::addFPSCounter() {
 	if(!config) setup();
 	return pages[currentPageIndex]->addFPSCounter();
 }
+
 
 ofxSimpleGuiQuadWarp &ofxSimpleGuiToo::addQuadWarper(string name, ofBaseDraws &baseDraw, ofPoint *pts) {
 	return pages[currentPageIndex]->addQuadWarper(name, baseDraw, pts);
@@ -401,7 +409,7 @@ void ofxSimpleGuiToo::keyPressed(ofKeyEventArgs &e) {
 	}
 	
 	if(doDraw) {
-		headerPage->keyPressed(e);
+		//headerPage->keyPressed(e);	//header has no key events for us!
 		pages[currentPageIndex]->keyPressed(e);
 	}
 	

@@ -20,7 +20,8 @@ void ofxSimpleGuiTitle::setup() {
 
 void ofxSimpleGuiTitle::loadFromXML(ofxXmlSettings &XML) {
 	if(!value) return;
-	setValue(XML.getValue(controlType + "_" + key + ":value", 0));
+	if (!ignoreXML)
+		setValue(XML.getValue(controlType + "_" + key + ":value", 0));
 }
 
 void ofxSimpleGuiTitle::saveToXML(ofxXmlSettings &XML) {

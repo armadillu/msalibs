@@ -86,7 +86,8 @@ void ofxSimpleGuiComboBox::setup() {
 }
 
 void ofxSimpleGuiComboBox::loadFromXML(ofxXmlSettings &XML) {
-	setValue(XML.getValue(controlType + "_" + key + ":value", 0));
+	if (!ignoreXML)
+		setValue(XML.getValue(controlType + "_" + key + ":value", 0));
 }
 
 void ofxSimpleGuiComboBox::saveToXML(ofxXmlSettings &XML) {
@@ -208,7 +209,7 @@ void ofxSimpleGuiComboBox::setCBTextBGColor() {
 #define kSGCBTextPaddingY    15
 void ofxSimpleGuiComboBox::draw(float x, float y) {
 	//we assume a max of 256 characters.
-	char choiceBuf[256];
+	char choiceBuf[512];
 	
 	setPos(x, y);
 	
@@ -223,12 +224,17 @@ void ofxSimpleGuiComboBox::draw(float x, float y) {
 	setTextColor();
 //	sprintf(choiceBuf, "%s: %s", m_title, m_choices.size() ? m_choices[m_selectedChoice] : "(No Choices Available)");
 	
-	ofDrawBitmapString(m_title + "\n\n" + (m_choices.size() ? m_choices[m_selectedChoice] : "N/A"), kSGCBTextPaddingX, kSGCBTextPaddingY);
+	ofDrawBitmapString(m_title + " : " + (m_choices.size() ? m_choices[m_selectedChoice] : "N/A"), kSGCBTextPaddingX, kSGCBTextPaddingY);
 	//draw a combobox down triangle icon so the users know to click
 	ofTriangle(width - (kSGCBTriangleWidth + KSGCBTrianglePadding), kSGCBTextPaddingY/2,
 			   width - (KSGCBTrianglePadding), kSGCBTextPaddingY/2,
 			   width - (kSGCBTriangleWidth/2 + KSGCBTrianglePadding), kSGCBTextPaddingY);
 	
+	if ( ignoresXML() ){
+		ofSetHexColor(config->noXmlColor);
+		ofRect(width-config->noXmlBarWidth, 0, config->noXmlBarWidth, height);
+	}
+
 	if(m_hasFocus) {
 		setCBTextBGColor();
 		ofRect(0, height, width, config->comboBoxTextHeight * m_choices.size());

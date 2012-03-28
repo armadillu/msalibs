@@ -14,7 +14,8 @@ void ofxSimpleGuiButton::setup() {
 }
 
 void ofxSimpleGuiButton::loadFromXML(ofxXmlSettings &XML) {
-	setValue(XML.getValue(controlType + "_" + key + ":value", 0));
+	if (!ignoreXML)
+		setValue(XML.getValue(controlType + "_" + key + ":value", 0));
 }
 
 void ofxSimpleGuiButton::saveToXML(ofxXmlSettings &XML) {
@@ -42,6 +43,11 @@ void ofxSimpleGuiButton::setValue(bool b) {
 void ofxSimpleGuiButton::toggle() {
 	(*value) = !(*value); 
 }
+
+void ofxSimpleGuiButton::onKeyEnter() {
+	toggle();
+}
+
 
 void ofxSimpleGuiButton::setToggleMode(bool b) {
 	beToggle = b;

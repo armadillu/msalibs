@@ -54,6 +54,8 @@ public:
 	ofxSimpleGuiButton			&addButton(string name, bool &value);
 	ofxSimpleGuiContent			&addContent(string name, ofBaseDraws &content, float fixwidth = -1);
 	ofxSimpleGuiFPSCounter		&addFPSCounter();
+	
+	
 	ofxSimpleGuiQuadWarp		&addQuadWarper(string name, ofBaseDraws &baseDraw, ofPoint *pts);
 	//	ofxSimpleGuiMovieSlider		&addMovieSlider(string name, ofVideoPlayer& input);
 	ofxSimpleGuiSliderInt		&addSlider(string name, int &value, int min, int max);

@@ -46,6 +46,8 @@ ofxSimpleGuiControl::ofxSimpleGuiControl(string name) {
 	lock	  = false;
 	focused	  = false;
 	newColumn = false;
+	ignoreXML = false;
+	visualizeOnly = false;
 	setKeyboardShortcut(0);
 
 	setup();
@@ -109,8 +111,8 @@ ofxSimpleGuiControl &ofxSimpleGuiControl::setFullColor(bool forceActive) {
 
 ofxSimpleGuiControl &ofxSimpleGuiControl::setEmptyColor() {
 	ofSetHexColor(config->emptyColor);
-	//		if(isMouseOver()) ofSetHexColor(config->overColor.r, config->overColor.g, config->overColor.b);
-	//		if(focused && !isMouseOver()) ofSetHexColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
+	//		if(isMouseOver()) ofSetColor(config->overColor.r, config->overColor.g, config->overColor.b);
+	//		if(focused && !isMouseOver()) ofSetColor(config->focusColor.r, config->focusColor.g, config->focusColor.b);
 	return *this;
 }
 

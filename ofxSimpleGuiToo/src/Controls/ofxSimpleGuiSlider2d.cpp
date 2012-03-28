@@ -108,6 +108,11 @@ void ofxSimpleGuiSlider2d::draw(float x, float y) {
 	ofLine(pointv.x-x, 0, pointv.x-x, height-config->slider2DTextHeight);
 	ofLine(0, pointv.y-y,width, pointv.y-y);
 	
+	if ( ignoresXML() ){
+		ofSetHexColor(config->noXmlColor);
+		ofRect(width-config->noXmlBarWidth, height-config->slider2DTextHeight, config->noXmlBarWidth, config->slider2DTextHeight);
+	}
+
 	glPopMatrix();
 	ofDisableAlphaBlending();
 	

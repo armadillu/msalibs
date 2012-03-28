@@ -25,9 +25,11 @@ void ofxSimpleGuiQuadWarp::setup() {
 
 
 void ofxSimpleGuiQuadWarp::loadFromXML(ofxXmlSettings &XML) {
-	for(int i=0; i<4; i++) {
-		pts[i].x = XML.getValue(controlType + "_" + key + ":values_" + ofToString(i) + "_x", 0.0f);
-		pts[i].y = XML.getValue(controlType + "_" + key + ":values_" + ofToString(i) + "_y", 0.0f);
+	if (!ignoreXML){
+		for(int i=0; i<4; i++) {
+			pts[i].x = XML.getValue(controlType + "_" + key + ":values_" + ofToString(i) + "_x", 0.0f);
+			pts[i].y = XML.getValue(controlType + "_" + key + ":values_" + ofToString(i) + "_y", 0.0f);
+		}
 	}
 }
 
@@ -123,6 +125,11 @@ void ofxSimpleGuiQuadWarp::draw(float x, float y) {
 	}
 	ofEndShape(TRUE);
 	ofDisableAlphaBlending();
+	
+	if ( ignoresXML() ){
+		ofSetHexColor(config->noXmlColor);
+		ofRect(width-config->noXmlBarWidth, 0, config->noXmlBarWidth, height);
+	}
 	
 	glPopMatrix();
 }

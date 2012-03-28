@@ -27,8 +27,10 @@ void ofxSimpleGuiColorPicker::setup() {
 }
 
 void ofxSimpleGuiColorPicker::loadFromXML(ofxXmlSettings &XML) {
-	for(int i=0; i<4; i++) {
-		setValue(XML.getValue(controlType + "_" + key + ":values_" + ofToString(i), 0.0f), i);
+	if (!ignoreXML){
+		for(int i=0; i<4; i++) {
+			setValue(XML.getValue(controlType + "_" + key + ":values_" + ofToString(i), 0.0f), i);
+		}
 	}
 }
 
@@ -146,9 +148,15 @@ void ofxSimpleGuiColorPicker::draw(float x, float y) {
 	setTextBGColor();
 	ofRect(0, startY, width, config->sliderTextHeight);
 
+	if ( ignoresXML() ){
+		ofSetHexColor(config->noXmlColor);
+		ofRect(width-config->noXmlBarWidth, height - config->sliderTextHeight, config->noXmlBarWidth, config->sliderTextHeight);
+	}
+
 	glColor3f(getValue(0), getValue(1), getValue(2));
 //	ofRect(0, startY+config->sliderTextHeight, width, config->sliderTextHeight * 1.5);
-	ofRect(150, startY + 3, width - 150 -3, config->sliderTextHeight - 8);
+	ofRect(150, startY + 3, width - 150 -8, config->sliderTextHeight - 8);
+	
 	
 	setTextColor();
 	string s = name;

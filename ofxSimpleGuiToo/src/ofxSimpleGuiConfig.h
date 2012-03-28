@@ -51,6 +51,8 @@ public:
 	float	comboBoxHeight;
 	float	comboBoxTextHeight;
 
+	float	noXmlBarWidth;
+	
 	ofPoint padding;
 	ofPoint offset;
 	ofPoint	slider2DSize;
@@ -65,6 +67,10 @@ public:
 	int fullActiveColor;
 	int emptyColor;
 	int borderColor;
+	int visualizeOnlyColor;
+	int noXmlColor;		//to highlight the fact that that particular control wont be saved/loaded in xml
+	int selectionColor;
+	int selectedBorderColor;
 
 	ofxSimpleGuiConfig();
 };
