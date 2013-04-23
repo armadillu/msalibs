@@ -53,7 +53,7 @@ ofxSimpleGuiPage::~ofxSimpleGuiPage() {
 
 ofxSimpleGuiPage &ofxSimpleGuiPage::setXMLName(string s) {
 	xmlFilename = s;
-	#ifdef TARGET_OS_IPHONE
+	#ifdef TARGET_OF_IPHONE
 		xmlFilename = "../Documents/" + xmlFilename; //iphone can't write inside app, only docs
 	#endif
 	return *this;
